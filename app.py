@@ -1,28 +1,43 @@
 import streamlit as st
 import google.generativeai as genai
-# ... (Diğer importlar) ...
+import time
+import datetime
 
-# --- API KEY KONTROLÜ VE GEMINI BAĞLANTISI (Sadece Secrets Kullanarak) ---
+# --- SAYFA AYARLARI ---
+# Yan paneli gizle ve sayfayı ortala
+st.set_page_config(
+    page_title="Pusula AI - Sanal Psikolog",
+    page_icon="🧭",
+    layout="centered",
+    initial_sidebar_state="collapsed" 
+)
 
-# Model bağlantı durumunu tutmak için session state kullanıyoruz
-if 'model' not in st.session_state:
-    st.session_state.model = None
+# --- CSS TASARIM (Pusula Renkleri ve Animasyonlar) ---
+st.markdown("""
+<style>
+    /* Genel Arkaplan */
+    .stApp { background-color: #F5F5F0; }
     
-if "api_keys" in st.secrets and "gemini" in st.secrets["api_keys"]:
-    gemini_api_key = st.secrets["api_keys"]["gemini"]
+    /* Başlıklar */
+    h1, h2, h3 { color: #2C3E50 !important; font-family: 'Helvetica', sans-serif; font-weight: 300; }
     
-    try:
-        genai.configure(api_key=gemini_api_key)
-        st.session_state.model = genai.GenerativeModel('gemini-pro')
-        
-        # Bu mesajı sadece uygulama sahibi görsün diye sidebar'a koyuyoruz
-        st.sidebar.success("Gemini bağlantısı başarıyla kuruldu.", icon="✅")
+    /* Chat Balonları */
+    .stChatMessage { background-color: white; border-radius: 15px; padding: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
     
-    except Exception:
-        st.sidebar.error("API Anahtarı geçersiz. Lütfen secrets dosyasını kontrol edin.")
-        st.session_state.model = None
-else:
-    st.sidebar.warning("Uygulama Sahibi: API anahtarı secrets dosyasında bulunamadı. Uygulama çalışmayabilir.")
-    st.session_state.model = None
-
-# ... (Kodun devamı) ...
+    /* Nefes Animasyonu */
+    @keyframes breath {
+        0% { transform: scale(1); opacity: 0.8; }
+        40% { transform: scale(1.8); opacity: 1; }
+        60% { transform: scale(1.8); opacity: 1; }
+        100% { transform: scale(1); opacity: 0.8; }
+    }
+    .breathing-circle {
+        width: 150px; height: 150px; background-color: #8DA399; border-radius: 50%;
+        margin: 50px auto; animation: breath 12s infinite ease-in-out;
+        display: flex; align-items: center; justify-content: center;
+        color: white; font-size: 16px; box-shadow: 0 0 20px rgba(141, 163, 153, 0.4);
+    }
+    
+    /* Panik Butonu */
+    .big-button > button {
+        width: 100%; height: 70px; background-color: #E07A5F; color:
