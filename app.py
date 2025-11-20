@@ -13,6 +13,7 @@ st.set_page_config(
 )
 
 # --- CSS TASARIM (Pusula Renkleri ve Animasyonlar) ---
+# Üçlü tırnak işaretleri doğru kapatıldı.
 st.markdown("""
 <style>
     /* Genel Arkaplan */
@@ -40,4 +41,10 @@ st.markdown("""
     
     /* Panik Butonu */
     .big-button > button {
-        width: 100%; height: 70px; background-color: #E07A5F; color:
+        width: 100%; height: 70px; background-color: #E07A5F; color: white;
+        font-size: 20px; border-radius: 15px; border: none;
+    }
+</style>
+""", unsafe_allow_html=True) # <-- Hatanın çözüldüğü yer burasıdır.
+
+# ---
