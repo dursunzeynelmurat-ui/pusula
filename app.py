@@ -90,8 +90,8 @@ if st.session_state.model is None:
         
         try:
             genai.configure(api_key=gemini_api_key)
-            # 💡 Hata düzeltmesi: Model adı 'gemini-2.5-flash' olarak güncellendi.
-            st.session_state.model = genai.GenerativeModel('gemini-2.5-flash') 
+            # 💡 Model Adı Düzeltildi: gemini-2.5-flash yerine gemini-2.5-pro deniyoruz.
+            st.session_state.model = genai.GenerativeModel('gemini-2.5-pro') 
             
         except Exception as e:
             st.error(f"API BAĞLANTI HATASI (Geliştirici Notu): {e}") 
