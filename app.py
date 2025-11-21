@@ -6,7 +6,7 @@ import datetime
 # --- SAYFA AYARLARI ---
 # Yan paneli gizle ve sayfayı ortala
 st.set_page_config(
-    page_title="Pusula AI - Sanal Psikolog",
+    page_title="Pusula - İçindeki Yön",
     page_icon="🧭",
     layout="centered",
     initial_sidebar_state="collapsed" 
@@ -92,7 +92,7 @@ if st.session_state.model is None:
 # SAYFA 1: ANA EKRAN
 # ==========================================
 if st.session_state.page == 'home':
-    st.markdown("<h1 style='text-align: center;'>Pusula AI 🧭</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'>Pusula 🧭</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; color: #666;'>Yapay Zeka Destekli İçsel Yolculuk</p>", unsafe_allow_html=True)
     st.write("---")
     
@@ -105,7 +105,7 @@ if st.session_state.page == 'home':
     col1, col2, col3 = st.columns([1, 8, 1])
     with col2:
         st.markdown('<div class="big-button">', unsafe_allow_html=True)
-        if st.button("MERKEZE DÖN (PANİK)"):
+        if st.button("ŞİMDİ ODAKLAN"): # <-- İsim Değişikliği: Merkeze Dön -> Şimdi Odaklan
             go_panic()
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
@@ -115,7 +115,7 @@ if st.session_state.page == 'home':
         
         c1, c2 = st.columns(2)
         with c1:
-            if st.button("💬 AI Rehberle Konuş", use_container_width=True):
+            if st.button("💬 Rehberle Konuş", use_container_width=True): # <-- İsim Değişikliği: AI Rehber -> Rehber
                 if st.session_state.model is None:
                     st.error("Bağlantı sorunu nedeniyle sohbet başlatılamıyor.")
                 else:
@@ -134,7 +134,7 @@ elif st.session_state.page == 'chat':
     with c1:
         if st.button("⬅️"): go_home(); st.rerun()
     with c2:
-        st.markdown("### Rehber (AI)")
+        st.markdown("### Rehber") # Başlıkta da AI ibaresini kaldırdım
 
     # Model kontrolü
     if st.session_state.model is None:
