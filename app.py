@@ -148,4 +148,82 @@ elif st.session_state.page == 'chat':
                 st.markdown(message["content"])
 
     # Kullanıcıdan Girdi Al
-    if prompt := st.chat_input("Neler hissediyorsun
+    if prompt := st.chat_input("Neler hissediyorsun?"):
+        # 1. Kullanıcı mesajını göster ve kaydet
+        st.chat_message("user").markdown(prompt)
+        st.session_state.messages.append({"role": "user", "content": prompt})
+
+        # 2. Sohbet Geçmişini Hazırla
+        contents = []
+        for msg in st.session_state.messages:
+            role = 'user' if msg['role'] in ['user', 'system'] else 'model'
+            contents.append({'role': role, 'parts': [{'text': msg['content']}]})
+        
+        try:
+            response = st.session_state.model.generate_content(contents)
+            ai_reply = response.text
+
+            # 3. AI Cevabını göster ve kaydet
+            with st.chat_message("assistant"):
+                st.markdown(ai_reply)
+            st.session_state.messages.append({"role": "assistant", "content": ai_reply})
+
+        except Exception as e:
+            st.error("Bağlantı hatası veya token limiti aşıldı.")
+            st.error(f"Detay: {e}")
+
+
+# ==========================================
+# SAYFA 3: NEFES (PANİK)
+# ==========================================
+elif st.session_state.page == 'panic':
+    c1, c2 = st.columns([1, 5])
+    with c1:
+        if st.button("⬅️"): go_home(); st.rerun()
+    
+    st.markdown("<h2 style='text-align: center;'>Sadece Daireye Bak</h2>", unsafe_allow_html=True)
+    st.markdown("""
+        <div class="breathing-circle">
+            Nefes Al...
+        </div>
+        <p style='text-align: center; margin-top: 20px; color: #555;'>
+        4 saniye al • 4 saniye tut • 4 saniye ver
+        </p>
+    """, unsafe_allow_html=True)
+    
+    # 5-4-3-2-1 Tekniği
+    with st.expander("Hala sakinleşemedin mi? Topraklanma Tekniğini dene 👇"):
+        st.write("👀 **5** tane gördüğün şey")
+        st.write("🖐️ **4** tane dokunduğun şey")
+        st.write("👂 **3** tane duyduğun ses")
+        st.write("👃 **2** tane kokladığın şey")
+        st.write("👅 **1** tane tattığın şey")
+
+
+# ==========================================
+# SAYFA 4: ENDİŞE KUTUSU
+# ==========================================
+elif st.session_state.page == 'worry':
+    c1, c2 = st.columns([1, 5])
+    with c1:
+        if st.button("⬅️"): go_home(); st.rerun()
+    with c2:
+        st.markdown("### Endişe Kutusu 📦")
+
+    st.info("Zihninden atamadığın düşünceleri buraya yaz ve 'Kutuya At' de. Artık onları taşımak zorunda değilsin.")
+
+    with st.form("worry_form", clear_on_submit=True):
+        text = st.text_area("Seni rahatsız eden düşünceyi buraya bırak:", height=100)
+        submitted = st.form_submit_button("Kutuya At ve Kilitle")
+        if submitted and text:
+            now = datetime.datetime.now().strftime("%d/%m %H:%M")
+            st.session_state.worries.insert(0, {"text": text, "date": now})
+            st.success("Düşünce kutuya atıldı. Şimdi rahatlayabilirsin.")
+
+    st.write("---")
+    if st.session_state.worries:
+        st.caption("Kutudakiler:")
+        for w in st.session_state.worries:
+            st.info(f"📅 {w['date']}\n\n{w['text']}")
+    else:
+        st.caption("Kutu boş. Zihnin sakin görünüyor.")
