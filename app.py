@@ -83,14 +83,14 @@ def go_panic(): st.session_state.page = 'panic'
 def go_chat(): st.session_state.page = 'chat'
 def go_worry(): st.session_state.page = 'worry'
 
-# --- API KEY KONTROLÜ VE GEMINI BAĞLANTISI (Güvenli Blok) ---
+# --- API KEY KONTROLÜ VE  BAĞLANTISI (Güvenli Blok) ---
 if st.session_state.model is None:
-    if "api_keys" in st.secrets and "gemini" in st.secrets["api_keys"]:
-        gemini_api_key = st.secrets["api_keys"]["gemini"]
+    if "api_keys" in st.secrets and "" in st.secrets["api_keys"]:
+        _api_key = st.secrets["api_keys"][""]
         
         try:
-            genai.configure(api_key=gemini_api_key)
-            st.session_state.model = genai.GenerativeModel('gemini-pro') 
+            genai.configure(api_key=_api_key)
+            st.session_state.model = genai.GenerativeModel('gemini-2.5-flash') 
             
         except Exception as e:
             st.error(f"API BAĞLANTI HATASI (Geliştirici Notu): {e}") 
