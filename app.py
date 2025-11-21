@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed" 
 )
 
-# --- CSS TASARIM (Pusula Renkleri ve Animasyonlar) ---
+# --- CSS TASARIM (Butonlar Kırmızı ve Büyük) ---
 st.markdown("""
 <style>
     /* Genel Arkaplan */
@@ -38,10 +38,19 @@ st.markdown("""
         color: white; font-size: 16px; box-shadow: 0 0 20px rgba(141, 163, 153, 0.4);
     }
     
-    /* Panik Butonu */
+    /* ODAKLAN Butonu (Kırmızı, Büyük ve Merkezde) */
     .big-button > button {
-        width: 100%; height: 70px; background-color: #E07A5F; color: white;
-        font-size: 20px; border-radius: 15px; border: none;
+        width: 100%; 
+        height: 100px; /* Butonu uzun yaptık */
+        background-color: #C0392B; /* Canlı Kırmızı */
+        color: white;
+        font-size: 24px; /* Yazıyı büyüttük */
+        border-radius: 15px; 
+        border: none;
+        transition: background-color 0.3s;
+    }
+    .big-button > button:hover {
+        background-color: #E74C3C; /* Mouse üzerine gelince rengi açılır */
     }
 </style>
 """, unsafe_allow_html=True) 
@@ -50,7 +59,6 @@ st.markdown("""
 if 'page' not in st.session_state:
     st.session_state.page = 'home'
 if 'messages' not in st.session_state:
-    # AI'a kim olduğunu öğretiyoruz (Sistem Mesajı)
     st.session_state.messages = [
         {
             "role": "system", 
@@ -85,7 +93,6 @@ if st.session_state.model is None:
             st.session_state.model = genai.GenerativeModel('gemini-pro') 
             
         except Exception as e:
-            # Hata oluşursa, model None kalır ve hata mesajı ekrana basılır
             st.error(f"API BAĞLANTI HATASI (Geliştirici Notu): {e}") 
     
 # ==========================================
@@ -102,39 +109,43 @@ if st.session_state.page == 'home':
     else:
         st.success("Sistem hazır. Rehberle konuşmaya başlayabilirsin. ✅")
 
-    col1, col2, col3 = st.columns([1, 8, 1])
-    with col2:
+    # --- ODAKLAN BUTONU (Sayfanın Ortası) ---
+    st.write("") # Ekstra boşluk
+    col_center1, col_center2, col_center3 = st.columns([1, 4, 1]) # Butonu ortalamak için sütunlar
+    
+    with col_center2: # Orta sütunda butonu göster
         st.markdown('<div class="big-button">', unsafe_allow_html=True)
-        if st.button("ŞİMDİ ODAKLAN"): # <-- İsim Değişikliği: Merkeze Dön -> Şimdi Odaklan
+        if st.button("ŞİMDİ ODAKLAN", key="panic_button"):
             go_panic()
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
-        st.caption("Kalp atışın hızlandıysa veya bunalmış hissediyorsan tıkla.")
-        
-        st.write("") # Boşluk
-        
-        c1, c2 = st.columns(2)
-        with c1:
-            if st.button("💬 Rehberle Konuş", use_container_width=True): # <-- İsim Değişikliği: AI Rehber -> Rehber
-                if st.session_state.model is None:
-                    st.error("Bağlantı sorunu nedeniyle sohbet başlatılamıyor.")
-                else:
-                    go_chat()
-                    st.rerun()
-        with c2:
-            if st.button("📦 Endişe Kutusu", use_container_width=True):
-                go_worry()
+        st.caption("Kalp atışın hızlandıysa veya bunalmış hissediyorsan hemen tıkla.")
+    
+    st.write("---")
+    
+    # --- ALT MENÜ BUTONLARI ---
+    c1, c2 = st.columns(2)
+    with c1:
+        if st.button("💬 Rehberle Konuş", use_container_width=True): 
+            if st.session_state.model is None:
+                st.error("Bağlantı sorunu nedeniyle sohbet başlatılamıyor.")
+            else:
+                go_chat()
                 st.rerun()
+    with c2:
+        if st.button("📦 Endişe Kutusu", use_container_width=True):
+            go_worry()
+            st.rerun()
 
 # ==========================================
-# SAYFA 2: GEMINI SOHBET (AI REHBER)
+# SAYFA 2: GEMINI SOHBET (REHBER)
 # ==========================================
 elif st.session_state.page == 'chat':
     c1, c2 = st.columns([1, 5])
     with c1:
         if st.button("⬅️"): go_home(); st.rerun()
     with c2:
-        st.markdown("### Rehber") # Başlıkta da AI ibaresini kaldırdım
+        st.markdown("### Rehber")
 
     # Model kontrolü
     if st.session_state.model is None:
