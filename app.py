@@ -1,4 +1,5 @@
 import streamlit as st
+st.write("DEBUG: Uygulama başladı, kod buraya kadar çalıştı.")
 import google.generativeai as genai
 import time
 import datetime
