@@ -90,7 +90,7 @@ if st.session_state.model is None:
         
         try:
             genai.configure(api_key=gemini_api_key)
-            # ⭐️ En stabil model: 'gemini-2.5-flash' olarak tekrar ayarlandı.
+            # Model, en stabil olan 'gemini-2.5-flash' olarak ayarlanmıştır.
             st.session_state.model = genai.GenerativeModel('gemini-2.5-flash') 
             
         except Exception as e:
@@ -137,6 +137,13 @@ if st.session_state.page == 'home':
         if st.button("📦 Endişe Kutusu", use_container_width=True):
             go_worry()
             st.rerun()
+
+    # --- FOOTER ---
+    # Kullanıcının isteği üzerine eklendi.
+    st.markdown(
+        "<p style='text-align: center; color: #aaa; font-size: 10px; margin-top: 50px;'>Created By Zeynel Murat DURSUN</p>", 
+        unsafe_allow_html=True
+    )
 
 # ==========================================
 # SAYFA 2: GEMINI SOHBET (REHBER)
