@@ -83,13 +83,14 @@ def go_panic(): st.session_state.page = 'panic'
 def go_chat(): st.session_state.page = 'chat'
 def go_worry(): st.session_state.page = 'worry'
 
-# --- API KEY KONTROLÜ VE  BAĞLANTISI (Güvenli Blok) ---
+# --- API KEY KONTROLÜ VE GEMINI BAĞLANTISI (Güvenli Blok) ---
 if st.session_state.model is None:
-    if "api_keys" in st.secrets and "" in st.secrets["api_keys"]:
-        _api_key = st.secrets["api_keys"][""]
+    if "api_keys" in st.secrets and "gemini" in st.secrets["api_keys"]:
+        gemini_api_key = st.secrets["api_keys"]["gemini"]
         
         try:
-            genai.configure(api_key=_api_key)
+            genai.configure(api_key=gemini_api_key)
+            # 💡 Hata düzeltmesi: Model adı 'gemini-2.5-flash' olarak güncellendi.
             st.session_state.model = genai.GenerativeModel('gemini-2.5-flash') 
             
         except Exception as e:
@@ -110,10 +111,10 @@ if st.session_state.page == 'home':
         st.success("Sistem hazır. Rehberle konuşmaya başlayabilirsin. ✅")
 
     # --- ODAKLAN BUTONU (Sayfanın Ortası) ---
-    st.write("") # Ekstra boşluk
-    col_center1, col_center2, col_center3 = st.columns([1, 4, 1]) # Butonu ortalamak için sütunlar
+    st.write("") 
+    col_center1, col_center2, col_center3 = st.columns([1, 4, 1]) 
     
-    with col_center2: # Orta sütunda butonu göster
+    with col_center2: 
         st.markdown('<div class="big-button">', unsafe_allow_html=True)
         if st.button("ŞİMDİ ODAKLAN", key="panic_button"):
             go_panic()
